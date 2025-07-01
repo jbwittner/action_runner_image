@@ -19,4 +19,6 @@ RUN apt-get update && apt-get install -y \
 USER runner
 
 # Install sdkman for the 'runner' user
-RUN curl -s "https://get.sdkman.io" | bash
+RUN curl -s "https://get.sdkman.io?ci=true" | bash
+
+
