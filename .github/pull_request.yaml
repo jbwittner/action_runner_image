@@ -1,0 +1,29 @@
+---
+name: Pull Request CI
+permissions:
+  contents: read
+"on":
+  pull_request:
+    branches:
+    - main
+concurrency:
+  group: "${{ github.workflow }}-${{ github.head_ref }}"
+  cancel-in-progress: true
+jobs:
+  build_docker:
+    runs-on: ubuntu-latest
+    name: Build Docker image (without push)
+    steps:
+    - name: Checkout Git repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Build
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        file: docker/Dockerfile
+        platforms: linux/amd64,linux/arm64
+        push: false
