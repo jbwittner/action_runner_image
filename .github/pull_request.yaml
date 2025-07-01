@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   build_docker:
-    runs-on: talos-runner
+    runs-on: ubuntu-latest
     name: Build Docker image (without push)
     needs:
     - tests
