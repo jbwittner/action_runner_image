@@ -13,8 +13,6 @@ jobs:
   build_docker:
     runs-on: ubuntu-latest
     name: Build Docker image (without push)
-    needs:
-    - tests
     steps:
     - name: Checkout Git repository
       uses: actions/checkout@v4
