@@ -21,4 +21,6 @@ USER runner
 # Install sdkman for the 'runner' user
 RUN curl -s "https://get.sdkman.io?ci=true" | bash
 
-
+# Set BASH_ENV for any bash process running in the container.
+# This makes sdkman automatically available in all CI 'run' steps.
+ENV BASH_ENV /home/runner/.sdkman/bin/sdkman-init.sh
