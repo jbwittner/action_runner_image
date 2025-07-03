@@ -10,17 +10,7 @@ USER root
 # unzip, zip: required by sdkman
 # Clean up apt cache to keep the image lean
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    unzip \
-    zip \
-    && rm -rf /var/lib/apt/lists/*
+    maven
 
 # Switch back to the non-root 'runner' user for security
 USER runner
-
-# Install sdkman for the 'runner' user
-RUN curl -s "https://get.sdkman.io?ci=true" | bash
-
-# Set BASH_ENV for any bash process running in the container.
-# This makes sdkman automatically available in all CI 'run' steps.
-ENV BASH_ENV /home/runner/.sdkman/bin/sdkman-init.sh
