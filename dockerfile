@@ -29,5 +29,8 @@ RUN apt-get update
 
 RUN apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
+# Install the github CLI
+RUN apt-get install -y gh
+
 # Switch back to the non-root 'runner' user for security
 USER runner
