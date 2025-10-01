@@ -1,6 +1,6 @@
 # Use the official GitHub Actions runner image as a base
 # Pinning the digest is a good practice for reproducible builds
-FROM ghcr.io/actions/actions-runner:2.327.1
+FROM ghcr.io/actions/actions-runner:2.328.0
 
 # Switch to root user to install system dependencies
 USER root
