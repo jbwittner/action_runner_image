@@ -8,8 +8,30 @@ USER root
 # Install necessary system dependencies
 RUN apt-get update && apt-get upgrade -y
 
-# Install maven
-RUN apt-get install -y maven
+# Install Temurin JDK 25.0.2+10
+ENV JAVA_HOME=/opt/java/openjdk
+ENV PATH=$JAVA_HOME/bin:$PATH
+RUN apt-get install -y curl ca-certificates \
+    && ARCH="$(dpkg --print-architecture)" \
+    && case "$ARCH" in \
+         amd64) JDK_ARCH=x64 ;; \
+         arm64) JDK_ARCH=aarch64 ;; \
+         *) echo "Unsupported arch: $ARCH" && exit 1 ;; \
+       esac \
+    && curl -fsSL -o /tmp/jdk.tar.gz \
+       "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jdk_${JDK_ARCH}_linux_hotspot_25.0.2_10.tar.gz" \
+    && mkdir -p "$JAVA_HOME" \
+    && tar -xzf /tmp/jdk.tar.gz -C "$JAVA_HOME" --strip-components=1 \
+    && rm /tmp/jdk.tar.gz
+
+# Install Maven 3.9.14
+ENV MAVEN_HOME=/opt/maven
+ENV PATH=$MAVEN_HOME/bin:$PATH
+RUN curl -fsSL -o /tmp/maven.tar.gz \
+       "https://archive.apache.org/dist/maven/maven-3/3.9.14/binaries/apache-maven-3.9.14-bin.tar.gz" \
+    && mkdir -p "$MAVEN_HOME" \
+    && tar -xzf /tmp/maven.tar.gz -C "$MAVEN_HOME" --strip-components=1 \
+    && rm /tmp/maven.tar.gz
 
 # Add Docker's official GPG key:
 RUN apt-get update
@@ -31,6 +53,20 @@ RUN apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugi
 
 # Install the github CLI
 RUN apt-get install -y gh
+
+# Install kustomize
+ARG KUSTOMIZE_VERSION=5.8.1
+RUN ARCH="$(dpkg --print-architecture)" \
+    && case "$ARCH" in \
+         amd64) KUSTOMIZE_ARCH=amd64 ;; \
+         arm64) KUSTOMIZE_ARCH=arm64 ;; \
+         *) echo "Unsupported arch: $ARCH" && exit 1 ;; \
+       esac \
+    && curl -fsSL -o /tmp/kustomize.tar.gz \
+       "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_${KUSTOMIZE_ARCH}.tar.gz" \
+    && tar -xzf /tmp/kustomize.tar.gz -C /usr/local/bin \
+    && chmod +x /usr/local/bin/kustomize \
+    && rm /tmp/kustomize.tar.gz
 
 # Switch back to the non-root 'runner' user for security
 USER runner
