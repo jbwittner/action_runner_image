@@ -1,6 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": [
+    "config:recommended"
+  ],
+  "rebaseWhen": "behind-base-branch",
+  "separateMinorPatch": true,
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
   "dockerfile": {
@@ -8,5 +12,34 @@
   },
   "github-actions": {
     "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"]
+  },
+  "packageRules": [
+    {
+      "description": "Group patch updates together and automerge",
+      "groupName": "Patch updates",
+      "matchUpdateTypes": [
+        "patch",
+        "pin"
+      ],
+      "automerge": true
+    },
+    {
+      "description": "Automerge minor updates",
+      "matchUpdateTypes": [
+        "minor"
+      ],
+      "automerge": true
+    },
+    {
+      "description": "Create PRs for major updates without automerge",
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "dependencyDashboardApproval": false,
+      "automerge": false
+    }
+  ],
+  "lockFileMaintenance": {
+    "automerge": true
   }
 }
