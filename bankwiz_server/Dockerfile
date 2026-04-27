@@ -2,6 +2,10 @@
 # Pinning the digest is a good practice for reproducible builds
 FROM ghcr.io/actions/actions-runner:2.332.0
 
+LABEL org.opencontainers.image.source="https://github.com/jbwittner/action_runner_image"
+LABEL org.opencontainers.image.description="Self-hosted GitHub Actions runner image for bankwiz_server (JDK 25, Maven, Docker, gh, kustomize)"
+LABEL org.opencontainers.image.licenses="MIT"
+
 # Switch to root user to install system dependencies
 USER root
 
