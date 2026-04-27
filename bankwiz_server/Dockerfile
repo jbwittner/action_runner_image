@@ -72,5 +72,8 @@ RUN ARCH="$(dpkg --print-architecture)" \
     && chmod +x /usr/local/bin/kustomize \
     && rm /tmp/kustomize.tar.gz
 
+# Provide a Maven settings.xml with GitHub Packages credentials wired to env vars
+COPY --chown=runner:runner settings.xml /home/runner/.m2/settings.xml
+
 # Switch back to the non-root 'runner' user for security
 USER runner
