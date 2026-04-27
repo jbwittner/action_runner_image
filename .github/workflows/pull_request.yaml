@@ -10,9 +10,29 @@ concurrency:
   group: "${{ github.workflow }}-${{ github.head_ref }}"
   cancel-in-progress: true
 jobs:
-  build_docker:
+  detect:
     runs-on: ubuntu-latest
-    name: Build Docker image (without push)
+    name: Detect changed images
+    outputs:
+      images: "${{ steps.filter.outputs.changes }}"
+    steps:
+    - name: Checkout Git repository
+      uses: actions/checkout@v4
+    - name: Detect changed image directories
+      id: filter
+      uses: dorny/paths-filter@v3
+      with:
+        filters: |
+          bankwiz_server: bankwiz_server/**
+  build:
+    needs: detect
+    if: "needs.detect.outputs.images != '[]'"
+    runs-on: ubuntu-latest
+    name: "Build ${{ matrix.image }} (no push)"
+    strategy:
+      fail-fast: false
+      matrix:
+        image: "${{ fromJson(needs.detect.outputs.images) }}"
     steps:
     - name: Checkout Git repository
       uses: actions/checkout@v4
@@ -23,7 +43,7 @@ jobs:
     - name: Build
       uses: docker/build-push-action@v6
       with:
-        context: .
-        file: Dockerfile
+        context: "${{ matrix.image }}"
+        file: "${{ matrix.image }}/Dockerfile"
         platforms: linux/amd64,linux/arm64
         push: false
