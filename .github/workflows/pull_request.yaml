@@ -17,7 +17,7 @@ jobs:
       images: "${{ steps.filter.outputs.changes }}"
     steps:
     - name: Checkout Git repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
     - name: Detect changed image directories
       id: filter
       uses: dorny/paths-filter@v3
@@ -35,7 +35,7 @@ jobs:
         image: "${{ fromJson(needs.detect.outputs.images) }}"
     steps:
     - name: Checkout Git repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         fetch-depth: 0
     - name: Set up Docker Buildx
