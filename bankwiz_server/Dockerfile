@@ -1,6 +1,6 @@
 # Use the official GitHub Actions runner image as a base
 # Pinning the digest is a good practice for reproducible builds
-FROM ghcr.io/actions/actions-runner:2.332.0
+FROM ghcr.io/actions/actions-runner:2.334.0
 
 LABEL org.opencontainers.image.source="https://github.com/jbwittner/action_runner_image"
 LABEL org.opencontainers.image.description="Self-hosted GitHub Actions runner image for bankwiz_server (JDK 25, Maven, Docker, gh, kustomize)"
