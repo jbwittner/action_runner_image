@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   detect:
-    runs-on: ubuntu-latest
+    runs-on: action-runner-image-runners
     name: Detect changed images
     outputs:
       images: "${{ steps.filter.outputs.changes }}"
@@ -27,7 +27,7 @@ jobs:
   build_push_docker:
     needs: detect
     if: "needs.detect.outputs.images != '[]'"
-    runs-on: ubuntu-latest
+    runs-on: action-runner-image-runners
     name: "Build and push ${{ matrix.image }}"
     permissions:
       packages: write
